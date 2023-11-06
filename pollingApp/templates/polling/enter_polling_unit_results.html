@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Enter Polling Unit Results</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f7f7f7;
+        margin: 0;
+        padding: 0;
+      }
+      h1 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 20px;
+        margin: 0;
+      }
+      form {
+        margin: 20px auto;
+        width: 50%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+      }
+      label {
+        font-weight: bold;
+      }
+      select {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      hr {
+        border: 1px solid #ddd;
+        margin: 20px 0;
+      }
+      h2 {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        margin: 20px 0;
+      }
+      table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background-color: #fff;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+      }
+      th {
+        background-color: #007bff;
+        color: #fff;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      input[type="number"] {
+        width: 100px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #0056b3;
+      }
+      p {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Enter Polling Unit Results</h1>
+    <form method="post">
+      {% csrf_token %}
+      <label for="lga_id">Select a Local Government:</label>
+      <select name="lga_id" id="lga_id">
+        <option value="">Select an LGA</option>
+        {% for lga in lgas %}
+        <option value="{{ lga.id }}">{{ lga.name }}</option>
+        {% endfor %}
+      </select>
+      <label for="ward_id">Select a Ward:</label>
+      <select name="ward_id" id="ward_id" disabled>
+        <option value="">Select a Ward</option>
+      </select>
+      <hr />
+    </form>
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% endif %}
+
+    <script>
+      // Get references to the LGA and Ward dropdowns
+      const lgaDropdown = document.getElementById("lga_id");
+      const wardDropdown = document.getElementById("ward_id");
+
+      console.log(lgaDropdown, wardDropdown, "new");
+      // Add an event listener to the LGA dropdown
+      const form = document.querySelector("form"); // Reference to the form
+
+      console.log(lgaDropdown, wardDropdown, "new");
+      // Add an event listener to the LGA dropdown
+      lgaDropdown.addEventListener("change", function () {
+        // Get the selected LGA value
+        const selectedLGA = lgaDropdown.value;
+
+        // Clear the Ward dropdown
+        wardDropdown.innerHTML = '<option value="">Select a Ward</option>';
+
+        // Remove existing party name, score fields, and submit button
+        const partyNameInput = document.getElementById("party_name");
+        const pollingNameInput = document.getElementById("polling_unit_name");
+        const scoreInput = document.getElementById("score");
+        const submitButton = document.querySelector('button[type="submit"]');
+
+        if (partyNameInput) {
+          partyNameInput.remove();
+        }
+
+        if (pollingNameInput) {
+            pollingNameInput.remove();
+        }
+        if (scoreInput) {
+          scoreInput.remove();
+        }
+        if (submitButton) {
+          submitButton.remove();
+        }
+
+        // Check if a valid LGA is selected
+        if (selectedLGA) {
+          // Fetch the wards associated with the selected LGA via AJAX
+          fetch(`/get_wards/?lga_id=${selectedLGA}`)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("wards", data);
+              data["wards"].forEach((ward) => {
+                const option = document.createElement("option");
+                option.value = ward.id;
+                option.text = ward.name;
+                wardDropdown.appendChild(option);
+              });
+              // Enable the Ward dropdown
+              wardDropdown.disabled = false;
+
+              // Create party name and score input fields
+              const partyNameInput = document.createElement("input");
+              partyNameInput.type = "text";
+              partyNameInput.name = "party_name";
+              partyNameInput.id = "party_name";
+              partyNameInput.placeholder = "Party Name";
+              form.appendChild(partyNameInput);
+
+              const pollingNameInput = document.createElement("input");
+              pollingNameInput.type = "text";
+              pollingNameInput.name = "polling_unit_name";
+              pollingNameInput.id = "polling_unit_name";
+              pollingNameInput.placeholder = "polling unit Name";
+              form.appendChild(pollingNameInput);
+
+              const scoreInput = document.createElement("input");
+              scoreInput.type = "number";
+              scoreInput.name = "scores";
+              scoreInput.id = "score";
+              scoreInput.placeholder = "Score";
+              form.appendChild(scoreInput);
+
+              // Create a submit button
+              const submitButton = document.createElement("button");
+              submitButton.type = "submit";
+              submitButton.textContent = "Save";
+              form.appendChild(submitButton);
+            });
+        } else {
+          // Disable the Ward dropdown if no LGA is selected
+          wardDropdown.disabled = true;
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Polling Unit Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+        form {
+            margin: 20px auto;
+            width: 50%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            color: red;
+        }
+        .nav {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav a {
+            text-decoration: none;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 10px 20px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        .nav a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Search Polling Unit Results</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="polling_unit_id">Enter Polling Unit ID:</label>
+        <input type="text" name="polling_unit_id" id="polling_unit_id">
+        <button type="submit">Search</button>
+    </form>
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% endif %}
+
+    <div class="nav">
+        <a href="{% url 'pollingApp:lga_summed_results' %}">View LGAs Summed Results</a>
+        <a href="{% url 'pollingApp:enter_polling_unit_results' %}">Enter Polling Unit Results</a>
+        <a href="{% url 'pollingApp:ward_list' %}">View Wards</a>
+    </div>
+</body>
+</html>

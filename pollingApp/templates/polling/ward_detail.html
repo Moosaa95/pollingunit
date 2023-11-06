@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ward Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+        div.container {
+            margin: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        p.label {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ward Detail</h1>
+    <div class="container">
+        <p class="label">Ward Name:</p>
+        <p>{{ ward.name }}</p>
+        <p class="label">Local Government:</p>
+        <p>{{ ward.lga.name }}</p>
+    </div>
+</body>
+</html>

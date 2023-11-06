@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>List of Wards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            background-color: #007BFF;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px;
+        }
+        li {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+        li:hover {
+            background-color: #f5f5f5;
+        }
+        li::before {
+            content: "Ward: ";
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>List of Wards</h1>
+    <ul>
+        {% for ward in wards %}
+            <li>
+                <a href="{% url 'pollingApp:ward_detail' ward.id %}">{{ ward.name }}</a>
+            </li>
+        {% empty %}
+            <li>No wards found.</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
